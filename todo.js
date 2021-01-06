@@ -8,7 +8,7 @@ serveur.use(express.urlencoded({ extended: false }));
 serveur.use(express.static('public'));
 
 let db;
-let connectionString = "mongodb+srv://pgahide:MonmotdepasseTODOAPP@cluster0.tsqx0.mongodb.net/todo-app?retryWrites=true&w=majority";
+let connectionString = "mongodb+srv://**:***@cluster0.tsqx0.mongodb.net/todo-app?retryWrites=true&w=majority";
 let options = { useNewUrlParser: true, useUnifiedTopology: true };
 
 mongo.connect(connectionString, options, (err, client) => {
@@ -52,9 +52,10 @@ serveur.get('/', (req, res) => {
           <h1 class="py-1 text-center display-4">Choses à faire</h1>
 
           <div class="p-3 shadow-sm jumbotron">
-          <form action="/ajouter" method="POST">
+          <form id="ajout-form" action="/ajouter" method="POST">
           <div class="d-flex align-items-center">
           <input
+          id="chose-input"
           name="chose"
           class="mr-3 form-control"
                   type="text"
@@ -67,7 +68,7 @@ serveur.get('/', (req, res) => {
                 </form>
                 </div>
 
-                <ul class="pb-5 list-group">
+                <ul id="choses-ul" class="pb-5 list-group">
                   ${choses.map(chose => `
                     <li
                       class="list-group-item list-group-item-action d-flex align-items-center justify-content-between"
@@ -92,13 +93,11 @@ serveur.get('/', (req, res) => {
 });
 
 serveur.post('/ajouter', (req, res) => {
-  //console.log(req.body.chose);
-  //res.send('Requête bien reçue !');
-  //console.log(db.collections('choses'));
   const nouvelleChose = { contenu: req.body.chose };
-  db.collection('choses').insertOne(nouvelleChose, () => {
-    //res.send('Enregistré !');
-    res.redirect('/');
+  db.collection('choses').insertOne(nouvelleChose, (err, info) => {
+    //console.log(info.ops);
+    res.json(info.ops[0]);
+    //res.send('Document ajouté');
   });
 });
 

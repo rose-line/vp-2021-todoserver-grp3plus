@@ -1,3 +1,16 @@
+document.getElementById('ajout-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const nouvelleChose = document.getElementById('chose-input').value;
+  axios.post('/ajouter', { chose: nouvelleChose }).then((res) => {
+    //alert("Tentative d'ajout d'élément: " + nouvelleChose);
+    // Insérer le nouvel élément HTML
+    console.log(res);
+    document.getElementById('choses-ul').insertAdjacentHTML('beforeend', 'toto');
+  }).catch(() => {
+    console.log("Un problème est survenu durant l'ajout");
+  });
+});
+
 document.addEventListener('click', e => {
   if (e.target.classList.contains('btn-suppression')) {
     let idChose = e.target.getAttribute('data-id');
